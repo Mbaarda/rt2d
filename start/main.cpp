@@ -36,5 +36,7 @@ int main( void )
 	// As a local var, core will go out of scope and destroy Renderer->ResourceManager.
 	// ResourceManager destructor also deletes Shaders.
 
+
+
 	return 0;
 }

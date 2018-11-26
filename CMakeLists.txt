@@ -4,6 +4,7 @@ project (rt2d)
 
 # delete CMakeCache.txt from the build directory when you edit these options
 ####################################################################
+OPTION(MAKE_CHECKERS "Make RT2D checkers application" ON)
 OPTION(MAKE_START "Make RT2D start application" ON)
 OPTION(MAKE_DEMO "Make RT2D demo (tests) application" ON)
 OPTION(MAKE_CANVAS_DEMO "Make RT2D Canvas demo (tests) application" ON)
@@ -144,22 +145,22 @@ file(
 )
 
 ####################################################################
-# start                                                            #
+# start                                                          #
 ####################################################################
-IF(MAKE_START)
-	add_executable(start
+IF(MAKE_CHECKERS)
+	add_executable(checkers
 		start/main.cpp
 		start/myentity.cpp
 		start/myentity.h
 		start/myscene.cpp
 		start/myscene.h
 	)
-	target_link_libraries(start
+	target_link_libraries(checkers
 		${ALL_GRAPHICS_LIBS}
 	)
 	# Copy assets to the build directory
 	file(
-		COPY start/assets
+		COPY checkers/assets
 		DESTINATION ${CMAKE_BINARY_DIR}
 	)
 ENDIF()
