@@ -149,11 +149,14 @@ file(
 ####################################################################
 IF(MAKE_CHECKERS)
 	add_executable(checkers
-		start/main.cpp
-		start/myentity.cpp
-		start/myentity.h
-		start/myscene.cpp
-		start/myscene.h
+		checkers/main.cpp
+		checkers/myentity.cpp
+		checkers/myentity.h
+		checkers/myscene.cpp
+		checkers/myscene.h
+		checkers/piece.cpp
+		checkers/piece.h
+			
 	)
 	target_link_libraries(checkers
 		${ALL_GRAPHICS_LIBS}

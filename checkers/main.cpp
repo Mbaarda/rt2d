@@ -35,7 +35,6 @@ int main( void )
 	// No need to explicitly clean up the core.
 	// As a local var, core will go out of scope and destroy Renderer->ResourceManager.
 	// ResourceManager destructor also deletes Shaders.
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
