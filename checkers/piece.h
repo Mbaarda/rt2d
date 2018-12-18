@@ -9,13 +9,13 @@ class piece : public Entity
 {
 public:
 
-	piece();
+	piece(int side);
 
 	virtual ~piece();
 
 	virtual void update(float deltaTime);
 
-	float getRadius() { return radius; }
+	float getRadius() { return this->radius; }
 
 private:
 	/* add your private declarations */

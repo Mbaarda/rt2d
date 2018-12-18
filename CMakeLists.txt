@@ -156,6 +156,8 @@ IF(MAKE_CHECKERS)
 		checkers/myscene.h
 		checkers/piece.cpp
 		checkers/piece.h
+		checkers/grid.cpp
+		checkers/grid.h
 			
 	)
 	target_link_libraries(checkers

@@ -2,13 +2,18 @@
 
 
 
-piece::piece() : Entity()
+piece::piece(int side) : Entity()
 {
-	this->addSprite("assets/black_piece.tga");
+	if (side == 0) {
+		this->addSprite("assets/black_piece.tga");
+		
+	}
+	else  {
+		this->addSprite("assets/white_piece.tga");
+	}
+	this->position = Point2(rand() % SWIDTH, rand() % SHEIGHT);
 
-	this->position = Point2(SWIDTH / 2, SHEIGHT / 2);
-
-	this->radius = this->sprite()->width() / 2;
+	this->radius = 32;
 }
 
 

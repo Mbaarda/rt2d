@@ -8,35 +8,33 @@
 #include <sstream>
 
 #include "myscene.h"
-
+#include "grid.h"
 
 MyScene::MyScene() : Scene()
 {
 	// start the timer.
 	t.start();
 
-	// draw grid
-	
-	gridwidth = 512;
-	gridheight = 512;
-	cellwidth = 51;
-	cellheight = 51;	
+	grid = new Grid();
+	currentPiece = nullptr;
 
-	piece* blackpiece = new piece();
-	blackPieces.push_back(blackpiece);
-	this->addChild(blackpiece);
-
-	// create a single instance of MyEntity in the middle of the screen.
-	// the Sprite is added in Constructor of MyEntity.
 	myentity = new MyEntity();
-	grid = new MyEntity();
-	mousePos =  Vector2(Input().getMouseX(), Input().getMouseY());
-
-	//myentity->position = Point2(SWIDTH/2, SHEIGHT/2);
-
-	// create the scene 'tree'
-	// add myentity to this Scene as a child.
 	this->addChild(myentity);
+
+	for (int i = blackPieces.size(); i <= 20 - 1; i++) {
+		piece* blackpiece = new piece(0);
+		blackPieces.push_back(blackpiece);
+		this->addChild(blackpiece);
+		std::cout << "someString" <<  std::endl;
+	}
+
+	for (int i = whitePieces.size(); i <= 20 - 1; i++) {
+		piece* whitepiece = new piece(1);
+		whitePieces.push_back(whitepiece);
+		this->addChild(whitepiece);
+	}
+	
+	mousePos =  Vector2(input()->getMouseX(), input()->getMouseY());
 
 
 	/*int matrix[10][10] = {	
@@ -53,16 +51,17 @@ MyScene::MyScene() : Scene()
 	}*/
 }
 
-
 MyScene::~MyScene()
 {
 	// deconstruct and delete the Tree
 	this->removeChild(myentity);
 	this->removeChild(blackPieces[0]);
+	this->removeChild(whitePieces[0]);
 
 	// delete myentity from the heap (there was a 'new' in the constructor)
 	delete myentity;
 	delete blackPieces[0];
+	delete whitePieces[0];
 }
 
 void MyScene::update(float deltaTime)
@@ -73,36 +72,77 @@ void MyScene::update(float deltaTime)
 	if (input()->getKeyUp(KeyCode::Escape)) {
 		this->stop();
 	}
-	//if (mousex > left )
 		
 	//Check mouse position
-	mousePos = Vector2(Input().getMouseX(), Input().getMouseY());
+	mousePos = Vector2(input()->getMouseX(), input()->getMouseY());
 
+	if (input()->getMouse(0)) {
+		//if(blackturn)
+		for (int i = 0; i <= blackPieces.size()-1; i++) {
+			Vector2 calculatedMinus = Vector2(mousePos.x - blackPieces[i]->position.x, mousePos.y - blackPieces[i]->position.y);
+			float distance = sqrt((calculatedMinus.x * calculatedMinus.x) + (calculatedMinus.y * calculatedMinus.y));
 
-	//std::vector<Sprite*> spritebatch = grid->spritebatch();
-	int counter = 0;
-	for (int x = 0; x < gridwidth; x++) {
-		for (int y = 0; y < gridheight; y++) {
-			//Point2 pos = spritebatch[counter]->spriteposition;
-			/*
-			int halfwidth = cellwidth / 2;
-			int halfheight = cellheight / 2;
-			int left = pos.x - halfwidth;
-			int right = pos.x + halfwidth;
-			int top = pos.y - halfheight;
-			int bottom = pos.y + halfheight;
-			*/
-			
+			if (distance < blackPieces[i]->getRadius()) {
+				blackPieces[i]->position = mousePos;
+				currentPiece = blackPieces[i];
+			}
 		}
 	}
+	else if (input()->getMouseUp(0)) {
+		Cell* currentCell = nullptr;
 
-	if (input()->getMouseDown(0)) {
-		//if(blackturn)
-		for (int i = 0; i <= blackPieces.size(); i++) {
-			Vector2 dv = Vector2(mousePos.x, mousePos.y, blackPieces[i]->position.x,blackPieces[i]->position.y)
-			if (true) {
+		for (int i = 0; i < this->grid->GetCellVector().size(); i++) {
+			bool inRange = false;
 
+			if (this->mousePos.x > this->grid->GetCellVector()[i]->position.x && this->mousePos.y > this->grid->GetCellVector()[i]->position.y) {
+				if (this->mousePos.x < this->grid->GetCellVector()[i]->position.x + this->grid->GetCellVector()[i]->size.x
+					&& this->mousePos.y < this->grid->GetCellVector()[i]->position.y + this->grid->GetCellVector()[i]->size.y) {
+					inRange = true;
+				}
 			}
+
+			if (inRange) {
+				currentCell = this->grid->GetCellVector()[i];
+			}
+		}
+
+		if (currentCell) {
+			currentPiece->position = Vector2(currentCell->position.x + (currentCell->size.x / 2), currentCell->position.y + (currentCell->size.y / 2));
+		}
+	}
+	
+	if (input()->getMouse(0)) {
+		//if(blackturn)
+		for (int i = 0; i <= whitePieces.size() - 1; i++) {
+			Vector2 calculatedMinus = Vector2(mousePos.x - whitePieces[i]->position.x, mousePos.y - whitePieces[i]->position.y);
+			float distance = sqrt((calculatedMinus.x * calculatedMinus.x) + (calculatedMinus.y * calculatedMinus.y));
+
+			if (distance < whitePieces[i]->getRadius()) {
+				whitePieces[i]->position = mousePos;
+				currentPiece = whitePieces[i];
+			}
+		}
+	}
+	else if (input()->getMouseUp(0)) {
+		Cell* currentCell = nullptr;
+
+		for (int i = 0; i < this->grid->GetCellVector().size(); i++) {
+			bool inRange = false;
+
+			if (this->mousePos.x > this->grid->GetCellVector()[i]->position.x && this->mousePos.y > this->grid->GetCellVector()[i]->position.y) {
+				if (this->mousePos.x < this->grid->GetCellVector()[i]->position.x + this->grid->GetCellVector()[i]->size.x
+					&& this->mousePos.y < this->grid->GetCellVector()[i]->position.y + this->grid->GetCellVector()[i]->size.y) {
+					inRange = true;
+				}
+			}
+
+			if (inRange) {
+				currentCell = this->grid->GetCellVector()[i];
+			}
+		}
+
+		if (currentCell) {
+			currentPiece->position = Vector2(currentCell->position.x + (currentCell->size.x / 2), currentCell->position.y + (currentCell->size.y / 2));
 		}
 	}
 }

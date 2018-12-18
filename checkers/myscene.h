@@ -14,6 +14,8 @@
 #include "myentity.h"
 #include "piece.h"
 
+class Grid; // Forward declaration
+
 /// @brief The MyScene class is the Scene implementation.
 class MyScene : public Scene
 {
@@ -31,17 +33,13 @@ public:
 private:
 	/// @brief the rotating square in the middle of the screen
 	MyEntity* myentity;
-	MyEntity* grid;
+	piece* currentPiece;
+	Grid* grid;
 
 	Vector2 mousePos;
 
 	std::vector<piece*> blackPieces;
-	//std::vector<piece*> whitePieces;
-
-	int gridwidth;
-	int gridheight;
-	int cellwidth;
-	int cellheight;
+	std::vector<piece*> whitePieces;
 
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
